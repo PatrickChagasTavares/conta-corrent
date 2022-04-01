@@ -2,13 +2,15 @@ package store
 
 import (
 	"github.com/jmoiron/sqlx"
+	"github.com/patrickchagastavares/StoneTest/store/account"
 	"github.com/patrickchagastavares/StoneTest/store/health"
 	"github.com/patrickchagastavares/StoneTest/utils/logger"
 )
 
 // Container modelo para exportação dos repositórios instanciados
 type Container struct {
-	Health health.Store
+	Health  health.Store
+	Account account.Store
 }
 
 // Options struct de opções para a criação de uma instancia dos repositórios
@@ -20,7 +22,8 @@ type Options struct {
 // New cria uma nova instancia dos repositórios
 func New(opts Options) *Container {
 	container := &Container{
-		Health: health.NewStore(opts.Reader),
+		Health:  health.NewStore(opts.Reader),
+		Account: account.NewStore(opts.Reader, opts.Writer),
 	}
 
 	logger.Info("Registered -> Store")
