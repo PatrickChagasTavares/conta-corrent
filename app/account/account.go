@@ -12,6 +12,7 @@ import (
 type App interface {
 	List(ctx context.Context) ([]*model.Account, error)
 	GetBalanceByID(ctx context.Context, id int) (*model.Account, error)
+	GetByCpf(ctx context.Context, cpf string) (*model.Account, error)
 	Create(ctx context.Context, account *model.Account) error
 }
 
@@ -73,3 +74,13 @@ func (a *appImpl) Create(ctx context.Context, account *model.Account) error {
 
 	return nil
 }
+
+func (a *appImpl) GetByCpf(ctx context.Context, cpf string) (*model.Account, error) {
+	account, err := a.stores.Account.GetByCpf(ctx, cpf)
+	if err != nil {
+		return nil, errAccountGetByCpf
+	}
+
+	return account, nil
+}
+

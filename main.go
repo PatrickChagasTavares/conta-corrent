@@ -9,12 +9,14 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	emiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/patrickchagastavares/StoneTest/api"
+	"github.com/patrickchagastavares/StoneTest/api/middleware"
 	"github.com/patrickchagastavares/StoneTest/app"
 	"github.com/patrickchagastavares/StoneTest/model"
 	"github.com/patrickchagastavares/StoneTest/store"
 	"github.com/patrickchagastavares/StoneTest/utils/logger"
+	"github.com/patrickchagastavares/StoneTest/utils/session"
 	"golang.org/x/sync/errgroup"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -33,15 +35,15 @@ func main() {
 	e = echo.New()
 	e.Debug = os.Getenv("ENV") != "prod"
 
-	loggerConf := middleware.LoggerConfig{
+	loggerConf := emiddleware.LoggerConfig{
 		Format:           "${id} ${time_custom} ${remote_ip} ${method} ${status} ${uri} ${latency_human}\n",
 		CustomTimeFormat: "2006-01-02 15:04:05",
 	}
-	e.Use(middleware.CORS())
-	e.Use(middleware.RequestID())
-	e.Use(middleware.LoggerWithConfig(loggerConf))
-	e.Use(middleware.BodyLimit("2M"))
-	e.Use(middleware.Recover())
+	e.Use(emiddleware.CORS())
+	e.Use(emiddleware.RequestID())
+	e.Use(emiddleware.LoggerWithConfig(loggerConf))
+	e.Use(emiddleware.BodyLimit("2M"))
+	e.Use(emiddleware.Recover())
 
 	errs.Go(func() (err error) {
 		sqlWriter, err = startSql(os.Getenv("DATABASE_WRITE_URL"))
@@ -70,15 +72,22 @@ func main() {
 		Reader: sqlReader,
 	})
 
+	// instanciando camada sessão
+	session := session.NewSession(os.Getenv("SESSION_SECRET"))
+
 	// instanciando camada de aplicação
 	apps := app.New(app.Options{
 		Stores:    stores,
 		StartedAt: time.Now(),
+		Session:   session,
 	})
 
 	api.Register(api.Options{
 		Group: e.Group(""),
 		Apps:  apps,
+		Middleware: middleware.Register(middleware.Options{
+			SessionJwt: session,
+		}),
 	})
 
 	// funcão padrão pra tratamento de erros da camada http
