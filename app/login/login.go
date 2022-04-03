@@ -25,9 +25,10 @@ type appImpl struct {
 // NewApp cria uma nova instancia do modulo login
 func NewApp(stores *store.Container, session session.Session, account account.App, password password.Password) App {
 	return &appImpl{
-		stores:  stores,
-		session: session,
-		account: account,
+		stores:   stores,
+		session:  session,
+		account:  account,
+		password: password,
 	}
 }
 
