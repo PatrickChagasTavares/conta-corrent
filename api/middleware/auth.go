@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/labstack/echo/v4"
-	"github.com/patrickchagastavares/StoneTest/utils/session"
+	"github.com/patrickchagastavares/conta-corrent/utils/session"
 )
 
 // SessionMiddleware it's an interface to validate some user roles

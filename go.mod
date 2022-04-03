@@ -1,4 +1,4 @@
-module github.com/patrickchagastavares/StoneTest
+module github.com/patrickchagastavares/conta-corrent
 
 go 1.17
 

@@ -1,13 +1,13 @@
 package v1
 
 import (
-	"github.com/patrickchagastavares/StoneTest/api/middleware"
-	"github.com/patrickchagastavares/StoneTest/api/v1/account"
-	"github.com/patrickchagastavares/StoneTest/api/v1/login"
-	"github.com/patrickchagastavares/StoneTest/api/v1/transfer"
+	"github.com/patrickchagastavares/conta-corrent/api/middleware"
+	"github.com/patrickchagastavares/conta-corrent/api/v1/account"
+	"github.com/patrickchagastavares/conta-corrent/api/v1/login"
+	"github.com/patrickchagastavares/conta-corrent/api/v1/transfer"
 
 	"github.com/labstack/echo/v4"
-	"github.com/patrickchagastavares/StoneTest/app"
+	"github.com/patrickchagastavares/conta-corrent/app"
 )
 
 // Register regristra as rotas v1

@@ -2,10 +2,10 @@ package api
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/patrickchagastavares/StoneTest/api/middleware"
-	v1 "github.com/patrickchagastavares/StoneTest/api/v1"
-	"github.com/patrickchagastavares/StoneTest/app"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/api/middleware"
+	v1 "github.com/patrickchagastavares/conta-corrent/api/v1"
+	"github.com/patrickchagastavares/conta-corrent/app"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
 )
 
 // Options struct de opções para a criação de uma instancia das rotas

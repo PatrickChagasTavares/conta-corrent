@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/patrickchagastavares/StoneTest/app"
-	"github.com/patrickchagastavares/StoneTest/model"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/app"
+	"github.com/patrickchagastavares/conta-corrent/model"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
 )
 
 type handler struct {

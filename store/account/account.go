@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/patrickchagastavares/StoneTest/model"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/model"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
 )
 
 // Store interface para implementação do account
@@ -45,7 +45,7 @@ func (s *storeImpl) List(ctx context.Context) (resp []*model.Account, err error)
 func (s *storeImpl) GetBalanceByID(ctx context.Context, id int) (resp *model.Account, err error) {
 	resp = &model.Account{}
 
-	query := `select name, cpf, balance,created_at from accounts where id = $1`
+	query := `select name, cpf, balance, created_at from accounts where id = $1`
 	err = s.reader.GetContext(ctx, resp, query, id)
 	if err != nil {
 		logger.ErrorContext(ctx, err)
@@ -75,7 +75,7 @@ func (s *storeImpl) GetByCpf(ctx context.Context, cpf string) (resp *model.Accou
 func (s *storeImpl) GetByID(ctx context.Context, id int) (resp *model.Account, err error) {
 	resp = &model.Account{}
 
-	query := `select id, cpf, secret_hash, secret_salt, balance from accounts where id = $1`
+	query := `select id, balance from accounts where id = $1`
 	err = s.reader.GetContext(ctx, resp, query, id)
 	if err != nil {
 		logger.ErrorContext(ctx, err)
@@ -88,7 +88,7 @@ func (s *storeImpl) GetByID(ctx context.Context, id int) (resp *model.Account, e
 
 func (s *storeImpl) CpfExists(ctx context.Context, cpf string) (exists bool, err error) {
 
-	query := "SELECT EXISTS(SELECT TRUE FROM accounts WHERE cpf=$1)"
+	query := "select exists(SELECT TRUE FROM accounts WHERE cpf= $1)"
 	err = s.reader.GetContext(ctx, &exists, query, cpf)
 	if err != nil {
 		logger.ErrorContext(ctx, err)

@@ -3,12 +3,11 @@ package login
 import (
 	"context"
 
-	"github.com/patrickchagastavares/StoneTest/app/account"
-	"github.com/patrickchagastavares/StoneTest/model"
-	"github.com/patrickchagastavares/StoneTest/store"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
-	"github.com/patrickchagastavares/StoneTest/utils/password"
-	"github.com/patrickchagastavares/StoneTest/utils/session"
+	"github.com/patrickchagastavares/conta-corrent/app/account"
+	"github.com/patrickchagastavares/conta-corrent/model"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/utils/password"
+	"github.com/patrickchagastavares/conta-corrent/utils/session"
 )
 
 type App interface {
@@ -16,16 +15,14 @@ type App interface {
 }
 
 type appImpl struct {
-	stores   *store.Container
 	session  session.Session
 	account  account.App
 	password password.Password
 }
 
 // NewApp cria uma nova instancia do modulo login
-func NewApp(stores *store.Container, session session.Session, account account.App, password password.Password) App {
+func NewApp(session session.Session, account account.App, password password.Password) App {
 	return &appImpl{
-		stores:   stores,
 		session:  session,
 		account:  account,
 		password: password,

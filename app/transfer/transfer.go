@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/patrickchagastavares/StoneTest/app/account"
-	"github.com/patrickchagastavares/StoneTest/model"
-	"github.com/patrickchagastavares/StoneTest/store"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/app/account"
+	"github.com/patrickchagastavares/conta-corrent/model"
+	"github.com/patrickchagastavares/conta-corrent/store"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
 	"golang.org/x/sync/errgroup"
 )
 

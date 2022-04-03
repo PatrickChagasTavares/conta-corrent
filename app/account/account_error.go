@@ -3,7 +3,7 @@ package account
 import (
 	"net/http"
 
-	"github.com/patrickchagastavares/StoneTest/model"
+	"github.com/patrickchagastavares/conta-corrent/model"
 )
 
 var (

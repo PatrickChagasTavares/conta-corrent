@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/patrickchagastavares/StoneTest/model"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/model"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
 )
 
 // Store interface para implementação do transfer
@@ -26,7 +26,7 @@ func NewStore(reader, write *sqlx.DB) Store {
 
 func (s *storeImpl) Create(ctx context.Context, transfer *model.Transfer) error {
 	query := `insert into transfers (origin_id, destination_id, amount) values ($1, $2, $3)`
-	_, err := s.write.ExecContext(ctx, query, transfer.OriginID, transfer.DestinationID, transfer.Value.String())
+	_, err := s.write.ExecContext(ctx, query, transfer.OriginID, transfer.DestinationID, transfer.Amount.String())
 	if err != nil {
 		logger.ErrorContext(ctx, err)
 		return err
@@ -43,6 +43,10 @@ func (s *storeImpl) ListByID(ctx context.Context, id int) (transfers []*model.Tr
 	if err != nil {
 		logger.ErrorContext(ctx, err)
 		return nil, err
+	}
+
+	for _, transfer := range transfers {
+		transfer.ConvertBigInt()
 	}
 
 	return transfers, nil

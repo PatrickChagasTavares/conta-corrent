@@ -4,10 +4,10 @@ import (
 	"context"
 	"math/big"
 
-	"github.com/patrickchagastavares/StoneTest/model"
-	"github.com/patrickchagastavares/StoneTest/store"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
-	"github.com/patrickchagastavares/StoneTest/utils/password"
+	"github.com/patrickchagastavares/conta-corrent/model"
+	"github.com/patrickchagastavares/conta-corrent/store"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/utils/password"
 )
 
 type App interface {

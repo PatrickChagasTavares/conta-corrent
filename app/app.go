@@ -3,13 +3,13 @@ package app
 import (
 	"time"
 
-	"github.com/patrickchagastavares/StoneTest/app/account"
-	"github.com/patrickchagastavares/StoneTest/app/login"
-	"github.com/patrickchagastavares/StoneTest/app/transfer"
-	"github.com/patrickchagastavares/StoneTest/store"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
-	"github.com/patrickchagastavares/StoneTest/utils/password"
-	"github.com/patrickchagastavares/StoneTest/utils/session"
+	"github.com/patrickchagastavares/conta-corrent/app/account"
+	"github.com/patrickchagastavares/conta-corrent/app/login"
+	"github.com/patrickchagastavares/conta-corrent/app/transfer"
+	"github.com/patrickchagastavares/conta-corrent/store"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/utils/session"
+	"github.com/patrickchagastavaresconta-corrent/utils/password"
 )
 
 // Container modelo para exportação dos serviços instanciados

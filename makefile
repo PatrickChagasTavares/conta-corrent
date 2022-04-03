@@ -6,19 +6,15 @@ NAME = initial_schemas
 
 # commands to start project
 
-.PHONY: dev
-dev:
+.PHONY: run-docker
+run-docker:
 	rm -f .ssh
 	ln -s "${HOME}/.ssh" .ssh
 	docker-compose build
 	docker-compose up
 
-.PHONY: watch
-watch:
-	nodemon --watch pkg --ext ".go" --exec docker-compose restart stone-api
-
-.PHONY: run
-run:
+.PHONY: dev
+dev:
 	VERSION=$(VERSION) go run main.go
 
 # commands to test project
@@ -37,10 +33,16 @@ mocks:
 	mkdir mocks
 
 	# application
-	mockgen -source=./app/health/health.go -destination=./mocks/health_app_mock.go -package=mocks -mock_names=App=MockHealthApp
+	mockgen -source=./app/account/account.go -destination=./mocks/account_app_mock.go -package=mocks -mock_names=App=MockAccountApp
+	mockgen -source=./app/login/login.go -destination=./mocks/login_app_mock.go -package=mocks -mock_names=App=MockLoginApp
+	mockgen -source=./app/transfer/transfer.go -destination=./mocks/transfer_app_mock.go -package=mocks -mock_names=App=MockTransferApp
 
 	# stores
-	mockgen -source=./store/health/health.go -destination=./mocks/health_mock.go -package=mocks -mock_names=Store=MockHealthStore
+	mockgen -source=./store/account/account.go -destination=./mocks/account_mock.go -package=mocks -mock_names=Store=MockAccountStore
+	mockgen -source=./store/transfer/transfer.go -destination=./mocks/transfer_mock.go -package=mocks -mock_names=Store=MockTransferStore
+
+	# utils
+	mockgen -source=./utils/session/session.go -destination=./mocks/session_mock.go -package=mocks -mock_names=Store=MockSessionStore
 
 # command to generate migration
 .PHONY: migration-create

@@ -2,9 +2,9 @@ package store
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/patrickchagastavares/StoneTest/store/account"
-	"github.com/patrickchagastavares/StoneTest/store/transfer"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/store/account"
+	"github.com/patrickchagastavares/conta-corrent/store/transfer"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
 )
 
 // Container modelo para exportação dos repositórios instanciados

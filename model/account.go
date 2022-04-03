@@ -72,7 +72,7 @@ func (a *Account) ConvertBigInt() {
 // CpfIsValid valid if cpf is valid
 func (a *Account) CpfIsValid() error {
 	a.removeSpecialCharacterCPF()
-	if !cpfSizeIsValid(a.CPF) {
+	if cpfSizeIsValid(a.CPF) {
 		return errCPFSizeInvalid
 	}
 	if invalidCPFIsKnown(a.CPF) {

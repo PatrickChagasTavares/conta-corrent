@@ -1,6 +1,6 @@
 package middleware
 
-import "github.com/patrickchagastavares/StoneTest/utils/session"
+import "github.com/patrickchagastavares/conta-corrent/utils/session"
 
 // Options struct de opções para a criação de uma instancia dos middlewares
 type Options struct {
