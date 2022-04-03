@@ -12,17 +12,18 @@ import (
 )
 
 type App interface {
-	Login(ctx context.Context, cpf string, secret string) (*auth, error)
+	Login(ctx context.Context, cpf string, secret string) (*session.SessionAuth, error)
 }
 
 type appImpl struct {
-	stores  *store.Container
-	session session.Session
-	account account.App
+	stores   *store.Container
+	session  session.Session
+	account  account.App
+	password password.Password
 }
 
 // NewApp cria uma nova instancia do modulo login
-func NewApp(stores *store.Container, session session.Session, account account.App) App {
+func NewApp(stores *store.Container, session session.Session, account account.App, password password.Password) App {
 	return &appImpl{
 		stores:  stores,
 		session: session,
@@ -30,7 +31,7 @@ func NewApp(stores *store.Container, session session.Session, account account.Ap
 	}
 }
 
-func (a *appImpl) Login(ctx context.Context, cpf string, secret string) (*auth, error) {
+func (a *appImpl) Login(ctx context.Context, cpf string, secret string) (*session.SessionAuth, error) {
 
 	if cpf == "" {
 		return nil, errLoginCPFNotInput
@@ -54,7 +55,7 @@ func (a *appImpl) Login(ctx context.Context, cpf string, secret string) (*auth, 
 		return nil, errLogin
 	}
 
-	if !password.Verify(user.Secret, account.SecretHash, account.SecretSalt) {
+	if !a.password.Verify(user.Secret, account.SecretHash, account.SecretSalt) {
 		return nil, errLoginPasswordInvalid
 	}
 
@@ -63,7 +64,7 @@ func (a *appImpl) Login(ctx context.Context, cpf string, secret string) (*auth, 
 		return nil, err
 	}
 
-	return &auth{
+	return &session.SessionAuth{
 		Token:      tokenString,
 		Expiration: expirationTime,
 	}, nil

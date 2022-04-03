@@ -20,13 +20,15 @@ type App interface {
 }
 
 type appImpl struct {
-	stores *store.Container
+	stores   *store.Container
+	password password.Password
 }
 
 // NewApp cria uma nova instancia do modulo accounts
-func NewApp(stores *store.Container) App {
+func NewApp(stores *store.Container, password password.Password) App {
 	return &appImpl{
-		stores: stores,
+		stores:   stores,
+		password: password,
 	}
 }
 
@@ -67,8 +69,8 @@ func (a *appImpl) Create(ctx context.Context, account *model.Account) error {
 		return errAccountCpfExists
 	}
 
-	account.SecretSalt = password.Salt()
-	account.SecretHash = password.Encode(account.Secret, account.SecretSalt)
+	account.SecretSalt = a.password.Salt()
+	account.SecretHash = a.password.Encode(account.Secret, account.SecretSalt)
 
 	if err := a.stores.Account.Create(ctx, account); err != nil {
 		logger.ErrorContext(ctx, err)

@@ -7,24 +7,39 @@ import (
 	"time"
 )
 
-func Encode(password, salt string) string {
-	return hash(password + salt)
+type Password interface {
+	Encode(password, salt string) string
+	Verify(decoded, encoded, salt string) bool
+	Salt() string
 }
 
-func Verify(decoded, encoded, salt string) bool {
-	return encoded == Encode(decoded, salt)
+type passwordImpl struct {
 }
 
-func Salt() string {
+func NewPassword() Password {
+	password := &passwordImpl{}
+
+	return password
+}
+
+func (p *passwordImpl) Encode(password, salt string) string {
+	return p.hash(password + salt)
+}
+
+func (p *passwordImpl) Verify(decoded, encoded, salt string) bool {
+	return encoded == p.Encode(decoded, salt)
+}
+
+func (p *passwordImpl) Salt() string {
 	b := make([]byte, 16)
 	rand.Seed(time.Now().UnixNano())
 	rand.Read(b)
 	r := fmt.Sprintf("%x-%x-%x-%x-%x",
 		b[0:4], b[4:6], b[6:8], b[8:10], b[10:])
-	return hash(r)
+	return p.hash(r)
 }
 
-func hash(s string) string {
+func (p *passwordImpl) hash(s string) string {
 	h := sha512.New()
 	h.Write([]byte(s))
 	bs := h.Sum(nil)
