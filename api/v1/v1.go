@@ -3,7 +3,6 @@ package v1
 import (
 	"github.com/patrickchagastavares/StoneTest/api/middleware"
 	"github.com/patrickchagastavares/StoneTest/api/v1/account"
-	"github.com/patrickchagastavares/StoneTest/api/v1/health"
 	"github.com/patrickchagastavares/StoneTest/api/v1/login"
 	"github.com/patrickchagastavares/StoneTest/api/v1/transfer"
 
@@ -15,7 +14,6 @@ import (
 func Register(g *echo.Group, apps *app.Container, middleware *middleware.Container) {
 	v1 := g.Group("/v1")
 
-	health.Register(v1.Group("/health"), apps)
 	account.Register(v1.Group("/account"), apps)
 	login.Register(v1.Group("/login"), apps)
 	transfer.Register(v1.Group("/transfer"), apps, middleware)

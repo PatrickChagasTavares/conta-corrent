@@ -3,14 +3,12 @@ package store
 import (
 	"github.com/jmoiron/sqlx"
 	"github.com/patrickchagastavares/StoneTest/store/account"
-	"github.com/patrickchagastavares/StoneTest/store/health"
 	"github.com/patrickchagastavares/StoneTest/store/transfer"
 	"github.com/patrickchagastavares/StoneTest/utils/logger"
 )
 
 // Container modelo para exportação dos repositórios instanciados
 type Container struct {
-	Health   health.Store
 	Account  account.Store
 	Transfer transfer.Store
 }
@@ -24,7 +22,6 @@ type Options struct {
 // New cria uma nova instancia dos repositórios
 func New(opts Options) *Container {
 	container := &Container{
-		Health:   health.NewStore(opts.Reader),
 		Account:  account.NewStore(opts.Reader, opts.Writer),
 		Transfer: transfer.NewStore(opts.Reader, opts.Writer),
 	}
