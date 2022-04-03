@@ -16,7 +16,8 @@ type Transfer struct {
 	ID            int       `json:"id" db:"id"`
 	OriginID      int       `json:"account_origin_id" db:"origin_id"`
 	DestinationID int       `json:"account_destination_id" db:"destination_id"`
-	Value         big.Int   `json:"amount" db:"amount"`
+	AmountDB      string    `json:"-" db:"amount"`
+	Amount        big.Int   `json:"amount" db:"-"`
 	CreateAt      time.Time `json:"created_at" db:"created_at"`
 }
 
@@ -29,9 +30,13 @@ func (t *Transfer) Validate() error {
 		return errTransferToNotInput
 	}
 
-	if t.Value.Cmp(big.NewInt(0)) <= 0 {
+	if t.Amount.Cmp(big.NewInt(0)) <= 0 {
 		return errTransferValueNotInput
 	}
 
 	return nil
+}
+
+func (t *Transfer) ConvertBigInt() {
+	t.Amount.SetString(t.AmountDB, 10)
 }

@@ -26,7 +26,7 @@ func NewStore(reader, write *sqlx.DB) Store {
 
 func (s *storeImpl) Create(ctx context.Context, transfer *model.Transfer) error {
 	query := `insert into transfers (origin_id, destination_id, amount) values ($1, $2, $3)`
-	_, err := s.write.ExecContext(ctx, query, transfer.OriginID, transfer.DestinationID, transfer.Value)
+	_, err := s.write.ExecContext(ctx, query, transfer.OriginID, transfer.DestinationID, transfer.Value.String())
 	if err != nil {
 		logger.ErrorContext(ctx, err)
 		return err

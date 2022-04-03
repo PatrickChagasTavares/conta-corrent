@@ -38,7 +38,8 @@ type Account struct {
 	SecretHash string    `json:"-" db:"secret_hash"`
 	SecretSalt string    `json:"-" db:"secret_salt"`
 	Secret     string    `json:"secret,omitempty" db:"-"`
-	Balance    big.Int   `json:"balance,omitempty" db:"balance"`
+	BalanceDB  string    `json:"-" db:"balance"`
+	Balance    big.Int   `json:"balance,omitempty" db:"-"`
 	CreatedAt  time.Time `json:"created_at,omitempty" db:"created_at"`
 	UpdatedAt  time.Time `json:"-" db:"updated_at"`
 }
@@ -64,11 +65,8 @@ func (a *Account) Validate() error {
 	return nil
 }
 
-// removeEspecChar remove special characters
-func (a *Account) removeSpecialCharacterCPF() {
-	regex := regexp.MustCompile("[^a-zA-Z0-9]+")
-
-	a.CPF = regex.ReplaceAllString(a.CPF, "")
+func (a *Account) ConvertBigInt() {
+	a.Balance.SetString(a.BalanceDB, 10)
 }
 
 // CpfIsValid valid if cpf is valid
@@ -86,21 +84,21 @@ func (a *Account) CpfIsValid() error {
 	return nil
 }
 
+// removeEspecChar remove special characters
+func (a *Account) removeSpecialCharacterCPF() {
+	regex := regexp.MustCompile("[^a-zA-Z0-9]+")
+
+	a.CPF = regex.ReplaceAllString(a.CPF, "")
+}
+
 // cpfSizeIsValid valid if cpf size is valid
 func cpfSizeIsValid(cpf string) bool {
-	if len(cpf) != cpfSize {
-		return false
-	}
-	return true
+	return len(cpf) != cpfSize
 }
 
 // InvalidCpfIsKnown valid if cpf is known
 func invalidCPFIsKnown(cpf string) bool {
-
-	if cpfInvalidKnown[cpf] {
-		return true
-	}
-	return false
+	return cpfInvalidKnown[cpf]
 }
 
 // CpfDigitsValid check if the cpf digits are valid

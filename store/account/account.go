@@ -52,6 +52,8 @@ func (s *storeImpl) GetBalanceByID(ctx context.Context, id int) (resp *model.Acc
 		return nil, err
 	}
 
+	resp.ConvertBigInt()
+
 	return resp, nil
 }
 
@@ -65,6 +67,8 @@ func (s *storeImpl) GetByCpf(ctx context.Context, cpf string) (resp *model.Accou
 		return nil, err
 	}
 
+	resp.ConvertBigInt()
+
 	return resp, nil
 }
 
@@ -77,6 +81,7 @@ func (s *storeImpl) GetByID(ctx context.Context, id int) (resp *model.Account, e
 		logger.ErrorContext(ctx, err)
 		return nil, err
 	}
+	resp.ConvertBigInt()
 
 	return resp, nil
 }
@@ -106,7 +111,7 @@ func (s *storeImpl) Create(ctx context.Context, account *model.Account) (err err
 
 func (s *storeImpl) UpdateBalance(ctx context.Context, account *model.Account) (err error) {
 	query := `update accounts set balance=$1, updated_at=$2 where id=$3`
-	_, err = s.write.ExecContext(ctx, query, account.Balance, account.UpdatedAt, account.ID)
+	_, err = s.write.ExecContext(ctx, query, account.Balance.String(), account.UpdatedAt, account.ID)
 	if err != nil {
 		logger.ErrorContext(ctx, err)
 		return err
