@@ -1,6 +1,7 @@
 package model
 
 import (
+	"math/big"
 	"net/http"
 	"time"
 )
@@ -15,7 +16,7 @@ type Transfer struct {
 	ID            int       `json:"id" db:"id"`
 	OriginID      int       `json:"account_origin_id" db:"origin_id"`
 	DestinationID int       `json:"account_destination_id" db:"destination_id"`
-	Value         float64   `json:"amount" db:"amount"`
+	Value         big.Int   `json:"amount" db:"amount"`
 	CreateAt      time.Time `json:"created_at" db:"created_at"`
 }
 
@@ -28,7 +29,7 @@ func (t *Transfer) Validate() error {
 		return errTransferToNotInput
 	}
 
-	if t.Value <= 0 {
+	if t.Value.Cmp(big.NewInt(0)) <= 0 {
 		return errTransferValueNotInput
 	}
 

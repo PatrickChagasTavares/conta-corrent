@@ -64,18 +64,18 @@ func (a *appImpl) Create(ctx context.Context, transfer *model.Transfer) error {
 		return err
 	}
 
-	if accountFrom.Balance < transfer.Value {
+	if accountFrom.Balance.CmpAbs(&transfer.Value) < 0 {
 		return errTransferBalance
 	}
 
-	accountFrom.Balance -= transfer.Value
-	accountTo.Balance += transfer.Value
+	accountFrom.Balance.Sub(&accountFrom.Balance, &transfer.Value)
+	accountTo.Balance.Add(&accountTo.Balance, &transfer.Value)
 	accountFrom.UpdatedAt = timeUpdated
 	accountTo.UpdatedAt = timeUpdated
 
 	if err := a.executeTransfer(ctx, &errs, accountFrom, accountTo); err != nil {
-		accountFrom.Balance += transfer.Value
-		accountTo.Balance -= transfer.Value
+		accountFrom.Balance.Add(&accountFrom.Balance, &transfer.Value)
+		accountTo.Balance.Sub(&accountTo.Balance, &transfer.Value)
 		accountFrom.UpdatedAt = timeUpdated
 		accountTo.UpdatedAt = timeUpdated
 

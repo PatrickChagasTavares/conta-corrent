@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"math/big"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -37,7 +38,7 @@ type Account struct {
 	SecretHash string    `json:"-" db:"secret_hash"`
 	SecretSalt string    `json:"-" db:"secret_salt"`
 	Secret     string    `json:"secret,omitempty" db:"-"`
-	Balance    float64   `json:"balance,omitempty" db:"balance"`
+	Balance    big.Int   `json:"balance,omitempty" db:"balance"`
 	CreatedAt  time.Time `json:"created_at,omitempty" db:"created_at"`
 	UpdatedAt  time.Time `json:"-" db:"updated_at"`
 }

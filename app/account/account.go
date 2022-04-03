@@ -2,6 +2,7 @@ package account
 
 import (
 	"context"
+	"math/big"
 
 	"github.com/patrickchagastavares/StoneTest/model"
 	"github.com/patrickchagastavares/StoneTest/store"
@@ -110,7 +111,7 @@ func (a *appImpl) UpdateBalance(ctx context.Context, account *model.Account) err
 		return errAccountID
 	}
 
-	if account.Balance < 0 {
+	if account.Balance.CmpAbs(big.NewInt(0)) < 0 {
 		return errAccountBalance
 	}
 
