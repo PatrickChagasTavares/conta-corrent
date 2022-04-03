@@ -13,11 +13,11 @@ const (
 )
 
 var (
-	errCPFRequired    = NewError(http.StatusBadRequest, "o cpf é obrigatorio.", nil)
-	errCPFSizeInvalid = NewError(http.StatusBadRequest, "o cpf deve ter no 11 caracteres.", nil)
-	errCPFInvalid     = NewError(http.StatusBadRequest, "o cpf é inválido.", nil)
-	errNameRequired   = NewError(http.StatusBadRequest, "o nome é obrigatorio.", nil)
-	errSecretRequired = NewError(http.StatusBadRequest, "a senha é obrigatoria.", nil)
+	errCPFRequired    = NewError(http.StatusBadRequest, "O cpf é obrigatório", nil)
+	errCPFSizeInvalid = NewError(http.StatusBadRequest, "O cpf deve ter no 11 caracteres", nil)
+	errCPFInvalid     = NewError(http.StatusBadRequest, "O cpf é inválido", nil)
+	errNameRequired   = NewError(http.StatusBadRequest, "O nome é obrigatório", nil)
+	errSecretRequired = NewError(http.StatusBadRequest, "A senha é obrigatoria", nil)
 
 	cpfInvalidKnown = map[string]bool{
 		"00000000000": true, "11111111111": true,
@@ -39,6 +39,7 @@ type Account struct {
 	Secret     string    `json:"secret,omitempty" db:"-"`
 	Balance    float64   `json:"balance,omitempty" db:"balance"`
 	CreatedAt  time.Time `json:"created_at,omitempty" db:"created_at"`
+	UpdatedAt  time.Time `json:"-" db:"updated_at"`
 }
 
 // validate if account is valid
@@ -55,7 +56,7 @@ func (a *Account) Validate() error {
 		return errCPFRequired
 	}
 
-	if err := a.cpfIsValid(); err != nil {
+	if err := a.CpfIsValid(); err != nil {
 		return err
 	}
 
@@ -69,7 +70,8 @@ func (a *Account) removeSpecialCharacterCPF() {
 	a.CPF = regex.ReplaceAllString(a.CPF, "")
 }
 
-func (a *Account) cpfIsValid() error {
+// CpfIsValid valid if cpf is valid
+func (a *Account) CpfIsValid() error {
 	a.removeSpecialCharacterCPF()
 	if !cpfSizeIsValid(a.CPF) {
 		return errCPFSizeInvalid
@@ -100,7 +102,7 @@ func invalidCPFIsKnown(cpf string) bool {
 	return false
 }
 
-//CpfDigitsValid check if the cpf digits are valid
+// CpfDigitsValid check if the cpf digits are valid
 func cpfDigitsValid(cpf string) bool {
 	firstPart := cpf[0:9]
 	sum := sumDigit(firstPart, cpfFirstDigitTable)

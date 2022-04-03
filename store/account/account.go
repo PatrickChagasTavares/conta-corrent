@@ -12,8 +12,11 @@ import (
 type Store interface {
 	List(ctx context.Context) ([]*model.Account, error)
 	GetBalanceByID(ctx context.Context, id int) (*model.Account, error)
+	GetByCpf(ctx context.Context, cpf string) (*model.Account, error)
+	GetByID(ctx context.Context, id int) (resp *model.Account, err error)
 	CpfExists(ctx context.Context, cpf string) (bool, error)
 	Create(ctx context.Context, account *model.Account) error
+	UpdateBalance(ctx context.Context, account *model.Account) error
 }
 
 type storeImpl struct {
@@ -52,6 +55,32 @@ func (s *storeImpl) GetBalanceByID(ctx context.Context, id int) (resp *model.Acc
 	return resp, nil
 }
 
+func (s *storeImpl) GetByCpf(ctx context.Context, cpf string) (resp *model.Account, err error) {
+	resp = &model.Account{}
+
+	query := `select id, name, cpf, secret_hash, secret_salt, balance from accounts where cpf = $1`
+	err = s.reader.GetContext(ctx, resp, query, cpf)
+	if err != nil {
+		logger.ErrorContext(ctx, err)
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (s *storeImpl) GetByID(ctx context.Context, id int) (resp *model.Account, err error) {
+	resp = &model.Account{}
+
+	query := `select id, cpf, secret_hash, secret_salt, balance from accounts where id = $1`
+	err = s.reader.GetContext(ctx, resp, query, id)
+	if err != nil {
+		logger.ErrorContext(ctx, err)
+		return nil, err
+	}
+
+	return resp, nil
+}
+
 func (s *storeImpl) CpfExists(ctx context.Context, cpf string) (exists bool, err error) {
 
 	query := "SELECT EXISTS(SELECT TRUE FROM accounts WHERE cpf=$1)"
@@ -67,6 +96,17 @@ func (s *storeImpl) CpfExists(ctx context.Context, cpf string) (exists bool, err
 func (s *storeImpl) Create(ctx context.Context, account *model.Account) (err error) {
 	query := `insert into accounts (name, cpf, secret_hash, secret_salt) values ($1, $2, $3, $4)`
 	_, err = s.write.ExecContext(ctx, query, account.Name, account.CPF, account.SecretHash, account.SecretSalt)
+	if err != nil {
+		logger.ErrorContext(ctx, err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *storeImpl) UpdateBalance(ctx context.Context, account *model.Account) (err error) {
+	query := `update accounts set balance=$1, updated_at=$2 where id=$3`
+	_, err = s.write.ExecContext(ctx, query, account.Balance, account.UpdatedAt, account.ID)
 	if err != nil {
 		logger.ErrorContext(ctx, err)
 		return err

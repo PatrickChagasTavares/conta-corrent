@@ -64,11 +64,11 @@ func (s *sessionImpl) LoadSession(ctx context.Context, tokenString string) (cont
 	return nil, errTokenExpired
 }
 
-func FromContext(ctx context.Context) *Session {
+func FromContext(ctx context.Context) *SessionJWT {
 	sessCtx := ctx.Value("session")
 	if sessCtx == nil {
 		return nil
 	}
-	sess := sessCtx.(Session)
+	sess := sessCtx.(SessionJWT)
 	return &sess
 }

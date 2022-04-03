@@ -8,6 +8,6 @@ import (
 
 var (
 	errGenerateToken = model.NewError(http.StatusInternalServerError, "Tivemos um problema para gerar o seu token", nil)
-	errGetSession    = model.NewError(http.StatusInternalServerError, "Tivemos um problema para recuperar sua sessão", nil)
-	errTokenExpired  = model.NewError(http.StatusBadRequest, "Seu token expirou", nil)
+	errGetSession    = model.NewError(http.StatusUnauthorized, "Não foi possivel recuperar a sessão informada", nil)
+	errTokenExpired  = model.NewError(http.StatusUnauthorized, "Seu token expirou", nil)
 )

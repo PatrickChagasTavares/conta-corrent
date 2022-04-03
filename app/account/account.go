@@ -13,7 +13,9 @@ type App interface {
 	List(ctx context.Context) ([]*model.Account, error)
 	GetBalanceByID(ctx context.Context, id int) (*model.Account, error)
 	GetByCpf(ctx context.Context, cpf string) (*model.Account, error)
+	GetByID(ctx context.Context, id int) (*model.Account, error)
 	Create(ctx context.Context, account *model.Account) error
+	UpdateBalance(ctx context.Context, account *model.Account) error
 }
 
 type appImpl struct {
@@ -76,6 +78,11 @@ func (a *appImpl) Create(ctx context.Context, account *model.Account) error {
 }
 
 func (a *appImpl) GetByCpf(ctx context.Context, cpf string) (*model.Account, error) {
+
+	if cpf == "" {
+		return nil, errAccountCpfNotInput
+	}
+
 	account, err := a.stores.Account.GetByCpf(ctx, cpf)
 	if err != nil {
 		return nil, errAccountGetByCpf
@@ -84,3 +91,33 @@ func (a *appImpl) GetByCpf(ctx context.Context, cpf string) (*model.Account, err
 	return account, nil
 }
 
+func (a *appImpl) GetByID(ctx context.Context, id int) (*model.Account, error) {
+	if id <= 0 {
+		return nil, errAccountID
+	}
+
+	account, err := a.stores.Account.GetByID(ctx, id)
+	if err != nil {
+		return nil, errAccountGetByCpf
+	}
+
+	return account, nil
+}
+
+func (a *appImpl) UpdateBalance(ctx context.Context, account *model.Account) error {
+
+	if account.ID <= 0 {
+		return errAccountID
+	}
+
+	if account.Balance < 0 {
+		return errAccountBalance
+	}
+
+	if err := a.stores.Account.UpdateBalance(ctx, account); err != nil {
+		logger.ErrorContext(ctx, err)
+		return errAccountUpdateBalance
+	}
+
+	return nil
+}

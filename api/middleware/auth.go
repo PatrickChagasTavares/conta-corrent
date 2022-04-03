@@ -10,6 +10,7 @@ import (
 // SessionMiddleware it's an interface to validate some user roles
 type SessionMiddleware interface {
 	Public(next echo.HandlerFunc) echo.HandlerFunc
+	Private(next echo.HandlerFunc) echo.HandlerFunc
 }
 
 type middlewareAuthImpl struct {

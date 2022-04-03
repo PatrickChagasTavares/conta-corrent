@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS accounts (
     secret_hash     VARCHAR(255)    NOT NULL,
     secret_salt     VARCHAR(255)    NOT NULL,
     balance         NUMERIC(10,2)   NOT NULL    DEFAULT 100.00,
-    created_at      TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP
+    created_at      TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP       NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    deleted_at      TIMESTAMP       NULL
 );
 
 CREATE TABLE IF NOT EXISTS transfers (

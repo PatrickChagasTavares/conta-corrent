@@ -5,6 +5,7 @@ import (
 	"github.com/patrickchagastavares/StoneTest/api/v1/account"
 	"github.com/patrickchagastavares/StoneTest/api/v1/health"
 	"github.com/patrickchagastavares/StoneTest/api/v1/login"
+	"github.com/patrickchagastavares/StoneTest/api/v1/transfer"
 
 	"github.com/labstack/echo/v4"
 	"github.com/patrickchagastavares/StoneTest/app"
@@ -17,5 +18,6 @@ func Register(g *echo.Group, apps *app.Container, middleware *middleware.Contain
 	health.Register(v1.Group("/health"), apps)
 	account.Register(v1.Group("/account"), apps)
 	login.Register(v1.Group("/login"), apps)
+	transfer.Register(v1.Group("/transfer"), apps, middleware)
 
 }
