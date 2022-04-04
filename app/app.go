@@ -1,15 +1,13 @@
 package app
 
 import (
-	"time"
-
 	"github.com/patrickchagastavares/conta-corrent/app/account"
 	"github.com/patrickchagastavares/conta-corrent/app/login"
 	"github.com/patrickchagastavares/conta-corrent/app/transfer"
 	"github.com/patrickchagastavares/conta-corrent/store"
 	"github.com/patrickchagastavares/conta-corrent/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/utils/password"
 	"github.com/patrickchagastavares/conta-corrent/utils/session"
-	"github.com/patrickchagastavaresconta-corrent/utils/password"
 )
 
 // Container modelo para exportação dos serviços instanciados
@@ -23,8 +21,6 @@ type Container struct {
 type Options struct {
 	Stores  *store.Container
 	Session session.Session
-
-	StartedAt time.Time
 }
 
 // New cria uma nova instancia dos serviços
@@ -35,7 +31,7 @@ func New(opts Options) *Container {
 
 	container := &Container{
 		Account:  account,
-		Login:    login.NewApp(opts.Stores, opts.Session, account, password),
+		Login:    login.NewApp(opts.Session, account, password),
 		Transfer: transfer.NewApp(opts.Stores, account),
 	}
 

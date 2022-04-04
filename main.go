@@ -3,20 +3,19 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	emiddleware "github.com/labstack/echo/v4/middleware"
-	"github.com/patrickchagastavares/StoneTest/api"
-	"github.com/patrickchagastavares/StoneTest/api/middleware"
-	"github.com/patrickchagastavares/StoneTest/app"
-	"github.com/patrickchagastavares/StoneTest/model"
-	"github.com/patrickchagastavares/StoneTest/store"
-	"github.com/patrickchagastavares/StoneTest/utils/logger"
-	"github.com/patrickchagastavares/StoneTest/utils/session"
+	"github.com/patrickchagastavares/conta-corrent/api"
+	"github.com/patrickchagastavares/conta-corrent/api/middleware"
+	"github.com/patrickchagastavares/conta-corrent/app"
+	"github.com/patrickchagastavares/conta-corrent/model"
+	"github.com/patrickchagastavares/conta-corrent/store"
+	"github.com/patrickchagastavares/conta-corrent/utils/logger"
+	"github.com/patrickchagastavares/conta-corrent/utils/session"
 	"golang.org/x/sync/errgroup"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -77,9 +76,8 @@ func main() {
 
 	// instanciando camada de aplicação
 	apps := app.New(app.Options{
-		Stores:    stores,
-		StartedAt: time.Now(),
-		Session:   session,
+		Stores:  stores,
+		Session: session,
 	})
 
 	api.Register(api.Options{
