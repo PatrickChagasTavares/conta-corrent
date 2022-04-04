@@ -1,7 +1,6 @@
 package transfer
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -31,7 +30,6 @@ func (h *handler) list(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	sess := session.FromContext(ctx)
-	fmt.Println(sess)
 
 	transfers, err := h.apps.Transfer.ListByID(ctx, sess.AccountOriginID)
 	if err != nil {
@@ -50,7 +48,7 @@ func (h *handler) create(c echo.Context) error {
 
 	transfer := new(model.Transfer)
 	if err := c.Bind(transfer); err != nil {
-		return err
+		return errTransferBind
 	}
 
 	transfer.OriginID = sess.AccountOriginID
@@ -59,7 +57,5 @@ func (h *handler) create(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, model.Response{
-		Data: transfer,
-	})
+	return c.JSON(http.StatusNoContent, nil)
 }

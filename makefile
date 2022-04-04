@@ -43,6 +43,7 @@ mocks:
 
 	# utils
 	mockgen -source=./utils/session/session.go -destination=./mocks/session_mock.go -package=mocks -mock_names=Store=MockSessionStore
+	mockgen -source=./utils/password/password.go -destination=./mocks/password_mock.go -package=mocks -mock_names=Store=MockPasswordStore
 
 # command to generate migration
 .PHONY: migration-create

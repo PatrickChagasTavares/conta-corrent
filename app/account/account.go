@@ -42,7 +42,7 @@ func (a *appImpl) List(ctx context.Context) ([]*model.Account, error) {
 }
 
 func (a *appImpl) GetBalanceByID(ctx context.Context, id int) (*model.Account, error) {
-	if id == 0 {
+	if id <= 0 {
 		return nil, errAccountID
 	}
 
@@ -88,7 +88,7 @@ func (a *appImpl) GetByCpf(ctx context.Context, cpf string) (*model.Account, err
 
 	account, err := a.stores.Account.GetByCpf(ctx, cpf)
 	if err != nil {
-		return nil, errAccountGetByCpf
+		return nil, errAccountGet
 	}
 
 	return account, nil
@@ -101,7 +101,7 @@ func (a *appImpl) GetByID(ctx context.Context, id int) (*model.Account, error) {
 
 	account, err := a.stores.Account.GetByID(ctx, id)
 	if err != nil {
-		return nil, errAccountGetByCpf
+		return nil, errAccountGet
 	}
 
 	return account, nil

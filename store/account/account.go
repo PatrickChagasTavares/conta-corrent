@@ -110,8 +110,8 @@ func (s *storeImpl) Create(ctx context.Context, account *model.Account) (err err
 }
 
 func (s *storeImpl) UpdateBalance(ctx context.Context, account *model.Account) (err error) {
-	query := `update accounts set balance=$1, updated_at=$2 where id=$3`
-	_, err = s.write.ExecContext(ctx, query, account.Balance.String(), account.UpdatedAt, account.ID)
+	query := `update accounts set balance=$1, updated_at=CURRENT_TIMESTAMP where id=$3`
+	_, err = s.write.ExecContext(ctx, query, account.Balance.String(), account.ID)
 	if err != nil {
 		logger.ErrorContext(ctx, err)
 		return err

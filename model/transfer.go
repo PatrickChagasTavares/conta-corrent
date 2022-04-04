@@ -18,7 +18,7 @@ type Transfer struct {
 	DestinationID int       `json:"account_destination_id" db:"destination_id"`
 	AmountDB      string    `json:"-" db:"amount"`
 	Amount        big.Int   `json:"amount" db:"-"`
-	CreateAt      time.Time `json:"created_at" db:"created_at"`
+	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 }
 
 func (t *Transfer) Validate() error {

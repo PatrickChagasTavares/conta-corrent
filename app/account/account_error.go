@@ -13,7 +13,7 @@ var (
 	errAccountBalance       = model.NewError(http.StatusBadRequest, "O valor do balanço não pode ser negativo", nil)
 	errAccountCpfExists     = model.NewError(http.StatusBadRequest, "O cpf informado já está cadastrado", nil)
 	errAccountCreate        = model.NewError(http.StatusInternalServerError, "Tivemos um problema ao criar sua conta", nil)
-	errAccountGetByCpf      = model.NewError(http.StatusInternalServerError, "Tivemos um problema ao buscar sua conta", nil)
+	errAccountGet           = model.NewError(http.StatusInternalServerError, "Tivemos um problema ao buscar sua conta", nil)
 	errAccountUpdateBalance = model.NewError(http.StatusInternalServerError, "Tivemos um problema ao atualizar o saldo da conta", nil)
 
 	errAccountCpfNotInput = model.NewError(http.StatusBadRequest, "O cpf é obrigatório", nil)

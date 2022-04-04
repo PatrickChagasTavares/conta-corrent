@@ -2,7 +2,6 @@ package transfer
 
 import (
 	"context"
-	"time"
 
 	"github.com/patrickchagastavares/conta-corrent/app/account"
 	"github.com/patrickchagastavares/conta-corrent/model"
@@ -30,7 +29,6 @@ func NewApp(stores *store.Container, account account.App) App {
 }
 
 func (a *appImpl) Create(ctx context.Context, transfer *model.Transfer) error {
-	timeUpdated := time.Now()
 	var (
 		accountFrom *model.Account
 		accountTo   *model.Account
@@ -42,7 +40,7 @@ func (a *appImpl) Create(ctx context.Context, transfer *model.Transfer) error {
 	}
 
 	errs.Go(func() (err error) {
-		accountFrom, err = a.stores.Account.GetByID(ctx, transfer.OriginID)
+		accountFrom, err = a.account.GetByID(ctx, transfer.OriginID)
 		if err != nil {
 			logger.ErrorContext(ctx, err)
 			return errTransferFrom
@@ -51,7 +49,7 @@ func (a *appImpl) Create(ctx context.Context, transfer *model.Transfer) error {
 	})
 
 	errs.Go(func() (err error) {
-		accountTo, err = a.stores.Account.GetByID(ctx, transfer.DestinationID)
+		accountTo, err = a.account.GetByID(ctx, transfer.DestinationID)
 		if err != nil {
 			logger.ErrorContext(ctx, err)
 			return errTransferTo
@@ -70,14 +68,10 @@ func (a *appImpl) Create(ctx context.Context, transfer *model.Transfer) error {
 
 	accountFrom.Balance.Sub(&accountFrom.Balance, &transfer.Amount)
 	accountTo.Balance.Add(&accountTo.Balance, &transfer.Amount)
-	accountFrom.UpdatedAt = timeUpdated
-	accountTo.UpdatedAt = timeUpdated
 
 	if err := a.executeTransfer(ctx, &errs, accountFrom, accountTo); err != nil {
 		accountFrom.Balance.Add(&accountFrom.Balance, &transfer.Amount)
 		accountTo.Balance.Sub(&accountTo.Balance, &transfer.Amount)
-		accountFrom.UpdatedAt = timeUpdated
-		accountTo.UpdatedAt = timeUpdated
 
 		go a.executeTransfer(context.Background(), &errs, accountFrom, accountTo)
 		logger.ErrorContext(ctx, err)
@@ -93,7 +87,7 @@ func (a *appImpl) Create(ctx context.Context, transfer *model.Transfer) error {
 
 func (a *appImpl) ListByID(ctx context.Context, accountID int) ([]*model.Transfer, error) {
 
-	if accountID == 0 {
+	if accountID <= 0 {
 		return nil, errListIDNotInformed
 	}
 
