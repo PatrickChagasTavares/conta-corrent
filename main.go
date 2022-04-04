@@ -11,6 +11,7 @@ import (
 	emiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/patrickchagastavares/conta-corrent/api"
 	"github.com/patrickchagastavares/conta-corrent/api/middleware"
+	"github.com/patrickchagastavares/conta-corrent/api/swagger"
 	"github.com/patrickchagastavares/conta-corrent/app"
 	"github.com/patrickchagastavares/conta-corrent/model"
 	"github.com/patrickchagastavares/conta-corrent/store"
@@ -22,6 +23,11 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
+// main configure swagger
+// method of use bearer token in requests
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	godotenv.Load(".env")
 	var (
@@ -90,6 +96,17 @@ func main() {
 
 	// funcão padrão pra tratamento de erros da camada http
 	e.HTTPErrorHandler = createHTTPErrorHandler()
+
+	if e.Debug {
+		swagger.Register(swagger.Options{
+			AccessKey:   os.Getenv("SWAGGER_ACCESS_KEY"),
+			Description: os.Getenv("SWAGGER_DESCRIPTION"),
+			Host:        os.Getenv("SWAGGER_HOST"),
+			Group:       e.Group("/swagger"),
+			Title:       os.Getenv("SWAGGER_TITLE"),
+			Version:     os.Getenv("SWAGGER_VERSION"),
+		})
+	}
 
 	if err := e.Start(":" + os.Getenv("PORT")); err != nil {
 		logger.Error(err)

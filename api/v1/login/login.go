@@ -7,6 +7,7 @@ import (
 	"github.com/patrickchagastavares/conta-corrent/app"
 	"github.com/patrickchagastavares/conta-corrent/model"
 	"github.com/patrickchagastavares/conta-corrent/utils/logger"
+	_ "github.com/patrickchagastavares/conta-corrent/utils/session" // used swagger
 )
 
 type handler struct {
@@ -24,6 +25,15 @@ func Register(g *echo.Group, apps *app.Container) {
 	logger.Info("login Register")
 }
 
+// list swagger document
+// @Description realiza login
+// @Tags Login
+// @Produce json
+// @Param login body auth true "expected structure"
+// @Success 200 {object} model.Response{Data=session.SessionAuth}
+// @Failure 400 {object} model.Response{error=model.Error}
+// @Failure 500 {object} model.Response{error=model.Error}
+// @Router /v1/login [post]
 func (h *handler) login(c echo.Context) error {
 	ctx := c.Request().Context()
 

@@ -1,7 +1,7 @@
 version: '3.7'
 
 networks:
-  stone-network:
+  conta-corrent-network:
     driver: bridge
 
 
@@ -9,20 +9,20 @@ services:
   db:
     image: postgres
     networks:
-      - stone-network
+      - conta-corrent-network
     environment:
-      POSTGRES_DB: stone
+      POSTGRES_DB: conta-corrent
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - '5432:5432'
 
-  stone-api:
+  conta-corrent-api:
     build:
       context: "."
       dockerfile: ".docker/Dockerfile"
     networks:
-      - stone-network
+      - conta-corrent-network
     env_file:
       - .env
     depends_on:

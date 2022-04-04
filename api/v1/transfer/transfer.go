@@ -26,6 +26,14 @@ func Register(g *echo.Group, apps *app.Container, middleware *middleware.Contain
 	logger.Info("transfer Register")
 }
 
+// list swagger document
+// @Description Usado para listar todos as transferências
+// @Tags Transfer
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} model.Response{Data=[]model.Transfer}
+// @Failure 500 {object} model.Response{error=model.Error}
+// @Router /v1/transfer [get]
 func (h *handler) list(c echo.Context) error {
 	ctx := c.Request().Context()
 
@@ -41,6 +49,16 @@ func (h *handler) list(c echo.Context) error {
 	})
 }
 
+// list swagger document
+// @Description Usado para realizar/criar uma transferencia
+// @Tags Transfer
+// @Produce json
+// @Security ApiKeyAuth
+// @Param transferencia body model.Transfer true "expected structure"
+// @Success 204
+// @Failure 400 {object} model.Response{error=model.Error}
+// @Failure 500 {object} model.Response{error=model.Error}
+// @Router /v1/transfer [post]
 func (h *handler) create(c echo.Context) error {
 	ctx := c.Request().Context()
 

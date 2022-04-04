@@ -1,0 +1,281 @@
+definitions:
+  big.Int:
+    type: object
+  login.auth:
+    properties:
+      cpf:
+        type: string
+      secret:
+        type: string
+    type: object
+  model.Account:
+    properties:
+      balance:
+        $ref: '#/definitions/big.Int'
+        type: object
+      cpf:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      secret:
+        type: string
+    type: object
+  model.Error:
+    properties:
+      detail:
+        type: object
+      message:
+        type: string
+    type: object
+  model.Response:
+    type: object
+  model.Transfer:
+    properties:
+      account_destination_id:
+        type: integer
+      account_origin_id:
+        type: integer
+      amount:
+        $ref: '#/definitions/big.Int'
+        type: object
+      created_at:
+        type: string
+      id:
+        type: integer
+    type: object
+  session.SessionAuth:
+    properties:
+      expiration:
+        type: string
+      token:
+        type: string
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /v1/account:
+    get:
+      description: Usado para listar todos as contas
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                Data:
+                  items:
+                    $ref: '#/definitions/model.Account'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+      tags:
+      - Account
+    post:
+      description: Usado para mostrar saldo da conta
+      parameters:
+      - description: expected structure
+        in: body
+        name: conta
+        required: true
+        schema:
+          $ref: '#/definitions/model.Account'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                Data:
+                  items:
+                    $ref: '#/definitions/model.Account'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+      tags:
+      - Account
+  /v1/account/{id}/balance:
+    get:
+      description: Usado para mostrar saldo da conta
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                Data:
+                  items:
+                    $ref: '#/definitions/model.Account'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+      tags:
+      - Account
+  /v1/login:
+    post:
+      description: realiza login
+      parameters:
+      - description: expected structure
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/login.auth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                Data:
+                  $ref: '#/definitions/session.SessionAuth'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+      tags:
+      - Login
+  /v1/transfer:
+    get:
+      description: Usado para listar todos as transferências
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                Data:
+                  items:
+                    $ref: '#/definitions/model.Transfer'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Transfer
+    post:
+      description: Usado para realizar/criar uma transferencia
+      parameters:
+      - description: expected structure
+        in: body
+        name: transferencia
+        required: true
+        schema:
+          $ref: '#/definitions/model.Transfer'
+      produces:
+      - application/json
+      responses:
+        "204": {}
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.Response'
+            - properties:
+                error:
+                  $ref: '#/definitions/model.Error'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Transfer
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -26,6 +26,13 @@ test:
 test-cover: test
 	go tool cover -html=coverage.out
 
+# comando to generante docs
+.PHONY: docs
+docs:
+	go install github.com/swaggo/swag/cmd/swag@v1.6.7
+	go get github.com/swaggo/echo-swagger@v1.3.0
+	swag init --parseDependency --parseInternal
+
 # command to generate mocks
 .PHONY: mocks
 mocks: 
