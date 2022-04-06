@@ -5,7 +5,7 @@ import (
 
 	"github.com/patrickchagastavares/conta-corrent/app/account"
 	"github.com/patrickchagastavares/conta-corrent/model"
-	"github.com/patrickchagastavares/conta-corrent/store"
+	"github.com/patrickchagastavares/conta-corrent/store/transfer"
 	"github.com/patrickchagastavares/conta-corrent/utils/logger"
 	"golang.org/x/sync/errgroup"
 )
@@ -16,14 +16,14 @@ type App interface {
 }
 
 type appImpl struct {
-	stores  *store.Container
+	store   transfer.Store
 	account account.App
 }
 
 // NewApp cria uma nova instancia do modulo login
-func NewApp(stores *store.Container, account account.App) App {
+func NewApp(store transfer.Store, account account.App) App {
 	return &appImpl{
-		stores:  stores,
+		store:   store,
 		account: account,
 	}
 }
@@ -78,7 +78,7 @@ func (a *appImpl) Create(ctx context.Context, transfer *model.Transfer) error {
 		return err
 	}
 
-	if err := a.stores.Transfer.Create(ctx, transfer); err != nil {
+	if err := a.store.Create(ctx, transfer); err != nil {
 		return errtransfer
 	}
 
@@ -91,7 +91,7 @@ func (a *appImpl) ListByID(ctx context.Context, accountID int) ([]*model.Transfe
 		return nil, errListIDNotInformed
 	}
 
-	transfers, err := a.stores.Transfer.ListByID(ctx, accountID)
+	transfers, err := a.store.ListByID(ctx, accountID)
 	if err != nil {
 		logger.ErrorContext(ctx, err)
 		return nil, errListByID

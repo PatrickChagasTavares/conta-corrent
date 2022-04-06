@@ -11,7 +11,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/patrickchagastavares/conta-corrent/mocks"
 	"github.com/patrickchagastavares/conta-corrent/model"
-	"github.com/patrickchagastavares/conta-corrent/store"
 	"github.com/patrickchagastavares/conta-corrent/test"
 	"github.com/stretchr/testify/assert"
 )
@@ -49,7 +48,7 @@ func TestLisByID(t *testing.T) {
 
 			cs.PrepareMock(mock)
 
-			app := NewApp(&store.Container{Account: mock}, nil)
+			app := NewApp(mock, nil)
 
 			data, err := app.List(ctx)
 
@@ -99,7 +98,7 @@ func TestGetBalanceByID(t *testing.T) {
 
 			cs.PrepareMock(mock)
 
-			app := NewApp(&store.Container{Account: mock}, nil)
+			app := NewApp(mock, nil)
 
 			data, err := app.GetBalanceByID(ctx, cs.InputID)
 
@@ -149,7 +148,7 @@ func TestGetByCpf(t *testing.T) {
 
 			cs.PrepareMock(mock)
 
-			app := NewApp(&store.Container{Account: mock}, nil)
+			app := NewApp(mock, nil)
 
 			data, err := app.GetByCpf(ctx, cs.InputCPF)
 
@@ -199,7 +198,7 @@ func TestGetByID(t *testing.T) {
 
 			cs.PrepareMock(mock)
 
-			app := NewApp(&store.Container{Account: mock}, nil)
+			app := NewApp(mock, nil)
 
 			data, err := app.GetByID(ctx, cs.InputID)
 
@@ -247,7 +246,7 @@ func TestUpdateBalance(t *testing.T) {
 
 			cs.PrepareMock(mock)
 
-			app := NewApp(&store.Container{Account: mock}, nil)
+			app := NewApp(mock, nil)
 
 			err := app.UpdateBalance(ctx, cs.Inputaccount)
 
@@ -325,7 +324,7 @@ func TestCreate(t *testing.T) {
 			cs.PrepareMockAccount(mockAccount)
 			cs.PrepareMockPassword(mockPassword)
 
-			app := NewApp(&store.Container{Account: mockAccount}, mockPassword)
+			app := NewApp(mockAccount, mockPassword)
 
 			err := app.Create(ctx, cs.Inputaccount)
 

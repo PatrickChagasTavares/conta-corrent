@@ -5,7 +5,7 @@ import (
 	"math/big"
 
 	"github.com/patrickchagastavares/conta-corrent/model"
-	"github.com/patrickchagastavares/conta-corrent/store"
+	"github.com/patrickchagastavares/conta-corrent/store/account"
 	"github.com/patrickchagastavares/conta-corrent/utils/logger"
 	"github.com/patrickchagastavares/conta-corrent/utils/password"
 )
@@ -20,20 +20,20 @@ type App interface {
 }
 
 type appImpl struct {
-	stores   *store.Container
+	store    account.Store
 	password password.Password
 }
 
 // NewApp cria uma nova instancia do modulo accounts
-func NewApp(stores *store.Container, password password.Password) App {
+func NewApp(store account.Store, password password.Password) App {
 	return &appImpl{
-		stores:   stores,
+		store:    store,
 		password: password,
 	}
 }
 
 func (a *appImpl) List(ctx context.Context) ([]*model.Account, error) {
-	accounts, err := a.stores.Account.List(ctx)
+	accounts, err := a.store.List(ctx)
 	if err != nil {
 		return nil, errAccountList
 	}
@@ -46,7 +46,7 @@ func (a *appImpl) GetBalanceByID(ctx context.Context, id int) (*model.Account, e
 		return nil, errAccountID
 	}
 
-	account, err := a.stores.Account.GetBalanceByID(ctx, id)
+	account, err := a.store.GetBalanceByID(ctx, id)
 	if err != nil {
 		return nil, errAccountBalanceByID
 	}
@@ -60,7 +60,7 @@ func (a *appImpl) Create(ctx context.Context, account *model.Account) error {
 		return err
 	}
 
-	exists, err := a.stores.Account.CpfExists(ctx, account.CPF)
+	exists, err := a.store.CpfExists(ctx, account.CPF)
 	if err != nil {
 		return errAccountCreate
 	}
@@ -72,7 +72,7 @@ func (a *appImpl) Create(ctx context.Context, account *model.Account) error {
 	account.SecretSalt = a.password.Salt()
 	account.SecretHash = a.password.Encode(account.Secret, account.SecretSalt)
 
-	if err := a.stores.Account.Create(ctx, account); err != nil {
+	if err := a.store.Create(ctx, account); err != nil {
 		logger.ErrorContext(ctx, err)
 		return errAccountCreate
 	}
@@ -86,7 +86,7 @@ func (a *appImpl) GetByCpf(ctx context.Context, cpf string) (*model.Account, err
 		return nil, errAccountCpfNotInput
 	}
 
-	account, err := a.stores.Account.GetByCpf(ctx, cpf)
+	account, err := a.store.GetByCpf(ctx, cpf)
 	if err != nil {
 		return nil, errAccountGet
 	}
@@ -99,7 +99,7 @@ func (a *appImpl) GetByID(ctx context.Context, id int) (*model.Account, error) {
 		return nil, errAccountID
 	}
 
-	account, err := a.stores.Account.GetByID(ctx, id)
+	account, err := a.store.GetByID(ctx, id)
 	if err != nil {
 		return nil, errAccountGet
 	}
@@ -117,7 +117,7 @@ func (a *appImpl) UpdateBalance(ctx context.Context, account *model.Account) err
 		return errAccountBalance
 	}
 
-	if err := a.stores.Account.UpdateBalance(ctx, account); err != nil {
+	if err := a.store.UpdateBalance(ctx, account); err != nil {
 		logger.ErrorContext(ctx, err)
 		return errAccountUpdateBalance
 	}

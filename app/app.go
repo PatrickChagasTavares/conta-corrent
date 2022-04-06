@@ -27,12 +27,12 @@ type Options struct {
 func New(opts Options) *Container {
 
 	password := password.NewPassword()
-	account := account.NewApp(opts.Stores, password)
+	account := account.NewApp(opts.Stores.Account, password)
 
 	container := &Container{
 		Account:  account,
 		Login:    login.NewApp(opts.Session, account, password),
-		Transfer: transfer.NewApp(opts.Stores, account),
+		Transfer: transfer.NewApp(opts.Stores.Transfer, account),
 	}
 
 	logger.Info("Initialized -> App")

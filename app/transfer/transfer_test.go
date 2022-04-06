@@ -10,7 +10,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/patrickchagastavares/conta-corrent/mocks"
 	"github.com/patrickchagastavares/conta-corrent/model"
-	"github.com/patrickchagastavares/conta-corrent/store"
 	"github.com/patrickchagastavares/conta-corrent/test"
 	"github.com/stretchr/testify/assert"
 )
@@ -59,7 +58,7 @@ func TestLisByID(t *testing.T) {
 
 			cs.PrepareMock(mockTransfer)
 
-			app := NewApp(&store.Container{Transfer: mockTransfer}, nil)
+			app := NewApp(mockTransfer, nil)
 
 			data, err := app.ListByID(ctx, cs.InputID)
 
@@ -117,7 +116,7 @@ func TestCreate(t *testing.T) {
 			cs.PrepareMock(mockTransfer)
 			cs.PrepareMockAccount(mockAccount)
 
-			app := NewApp(&store.Container{Transfer: mockTransfer}, mockAccount)
+			app := NewApp(mockTransfer, mockAccount)
 
 			err := app.Create(ctx, cs.InputTransfer)
 
