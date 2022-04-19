@@ -4,6 +4,10 @@ MIGRATION_SOURCE="file://db/migrations"
 
 NAME = initial_schemas
 
+
+mkfile_path:=$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+mkfile_dir:=$(shell cd $(shell dirname $(mkfile_path)); pwd)
+
 # commands to start project
 
 .PHONY: run-docker
@@ -20,7 +24,14 @@ dev:
 # commands to test project
 .PHONY: test
 test:
-	go test -count=1 -cover -failfast ./... -coverprofile=coverage.out 
+	chmod 777 $(mkfile_dir)/.gocache || true
+	docker run --rm --name go-test \
+		-v $(mkfile_dir):/opt/app \
+		-v $(mkfile_dir)/.gocache:/go \
+		-w /opt/app \
+		golang:latest \
+		go test -count=1 -cover -failfast -coverprofile=coverage.out ./...
+	docker image rm golang
 
 .PHONY: test-cover
 test-cover: test
